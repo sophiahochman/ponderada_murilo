@@ -152,6 +152,6 @@ Frontend interativo
 <sub>Figura 01: Montagem do hardware.</sub>
 </div>
 <div align="center">
-<img src="../static/docs/imagem-hardware.jpg" alt="Imagem representativa" style="max-width:900px; width:100%; height:auto;">
+<img src="static/docs/imagem-hardware.jpeg" alt="Imagem representativa" style="max-width:900px; width:100%; height:auto;">
 </div>
 
