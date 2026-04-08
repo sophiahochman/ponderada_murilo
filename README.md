@@ -1,78 +1,150 @@
-# Atividade Ponderada: Sistema de Medição de Estação Meteorológica IoT
+# 🌦️ Sistema de Estação Meteorológica IoT (End-to-End)
 
 ## 📖 Visão Geral
-Este é um sistema "Ponta a Ponta" de IoT, criado para o Módulo 5 de Engenharia da Computação - Automação de Processos e Sistemas. Através desta aplicação, recebemos dados do hardware (placa Arduino) via Serial, persistimos de maneira otimizada (`SQLite WAL`) e demonstramos em tempo real numa interface de monitoramento (`Frontend HTML/JS`).
 
-## 🏗️ Decisão de Arquitetura & Hardware Integrado
-Utilizamos a **Placa Arduino (COM3)** para fazer leitura dos sensores DHT11. Para estabelecer a ponte de comunicação do mundo físico com a Web, implementamos o **`serial_reader.py`**. Este script atua como um Listener Serial que decodifica as métricas via porta USB (`COM3`, Bauld 9600) e repassa como requisições `POST` idênticas às de produção para a API Flask na porta local 5000.  
+Este projeto implementa um sistema completo de **Internet das Coisas (IoT)** para monitoramento ambiental, integrando **hardware físico, backend e frontend** em uma arquitetura ponta a ponta.
 
-*(Nota: Para ambientes sem Hardware Físico, o projeto também mantém de backup um arquivo `simulator.py` que emula os envios HTTP.)*
+A solução coleta dados de sensores físicos (temperatura e umidade), processa e armazena essas informações em um servidor, e as disponibiliza em tempo real por meio de uma interface web interativa.
 
-### Tecnologias Usadas:
-- **Backend:** `Python 3.10+`, `Flask`, `Flask-CORS`, `PySerial`
-- **Banco de Dados:** `SQLite3` nativo, instanciado em modo Multi-process (`PRAGMA journal_mode=WAL` / `busy_timeout`) para evitar locas concorrentes.
-- **Frontend:** Vanilla HTML/CSS/JS renderizados diretamente pelo próprio Flask, com Visual Glassmorphism + Bento Box e Gráficos do **Chart.JS**.
+O grande diferencial do projeto é a **integração real entre o mundo físico e digital**, permitindo a visualização e manipulação dos dados coletados diretamente de um dispositivo físico.
 
 ---
 
-## 🛠️ Como Instalar e Rodar
+## 🧠 Arquitetura do Sistema
 
-### 1) Preparando o Ambiente
-Recomenda-se criar uma Virtual Env para as dependências não entrarem em colisão.
+O sistema é dividido em três camadas principais:
+
+### 🔌 1. Hardware (IoT) — *Responsabilidade desenvolvida por mim*
+
+A camada de hardware é responsável pela **coleta dos dados ambientais**.
+
+- Utilização de **Arduino + sensor DHT11**
+- Leitura de:
+  - 🌡️ Temperatura
+  - 💧 Umidade
+- Envio dos dados via **comunicação serial (USB)**
+
+Além disso, implementei a **ponte entre hardware e software**, garantindo que os dados físicos fossem corretamente interpretados e enviados ao sistema.
+
+---
+
+### 🔄 2. Camada de Integração (Serial → API)
+
+O arquivo `serial_reader.py` atua como um **middleware**, sendo essencial para conectar o hardware ao backend.
+
+Funções principais:
+- Escuta contínua da porta serial (`COM3`, baud rate 9600)
+- Decodifica os dados recebidos do Arduino
+- Converte os dados em requisições HTTP (`POST`)
+- Envia para a API Flask
+
+💡 Isso simula um ambiente de produção real onde dispositivos IoT enviam dados para servidores via rede.
+
+> Para testes sem hardware físico, o projeto inclui `simulator.py`, que simula o envio dos dados.
+
+---
+
+### ⚙️ 3. Backend (API + Persistência)
+
+Desenvolvido em **Python com Flask**, o backend é responsável por:
+
+- Receber dados do hardware
+- Processar e validar informações
+- Persistir os dados no banco
+- Disponibilizar APIs REST
+
+#### Tecnologias:
+- Python 3.10+
+- Flask
+- Flask-CORS
+- SQLite (modo WAL para alta concorrência)
+
+#### Funcionalidades:
+- CRUD completo de leituras
+- Estatísticas (média, mínimo, máximo)
+- API REST estruturada
+- Suporte a múltiplas requisições simultâneas
+
+---
+
+### 💻 4. Frontend (Interface Web)
+
+Interface desenvolvida com:
+
+- HTML + CSS + JavaScript puro
+- Visual moderno (Glassmorphism + Bento Grid)
+- Gráficos com Chart.js
+
+#### Funcionalidades:
+- Dashboard em tempo real
+- Visualização de histórico
+- Edição de dados
+- Exclusão de registros
+- Gráficos de evolução temporal
+
+---
+
+## 🔗 Fluxo Completo de Dados
+
+```text
+Sensor (DHT11)
+   ↓
+Arduino
+   ↓ (Serial USB)
+serial_reader.py
+   ↓ (HTTP POST)
+API Flask
+   ↓
+Banco SQLite
+   ↓
+Frontend (Dashboard em tempo real)
+```
+
+## 🛠️ Como Executar o Projeto
+
+### 1. Configurar ambiente
+
 ```bash
-# Crie o ambiente (Windows)
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate  # Windows
 
-# Instale os requerimentos
 pip install -r requirements.txt
 ```
+### 2. Rodar servidor
 
-### 2) Rodando a Estação / Servidor HTTP
-Este é o coração do projeto. O próprio `app.py` gera automaticamente as tabelas SQL e o arquivo `weather.db` em disco, para então montar o WebServer.
-```bash
+```
 python app.py
 ```
-> O Frontend já estará disponível! Basta acessar `http://localhost:5000` em seu navegador.
+Acesse: http://localhost:5000 
 
-### 3) Ativando a Leitura Física (Ponte com Arduino na COM3)
-Conecte o seu Arduino com o Sketch carregado na sua porta USB (o padrão do código é a *COM3* no Windows). Abra um **Novo Terminal** na mesma pasta, ative o ambiente virtual e execute o leitor:
+### 3. Conectar o Hardware
 
-```bash
+```
 python serial_reader.py
 ```
-> O reader indicará no console os envios em tempo-real decodificados da porta serial USB!
 
----
+## Principais rotas
 
-## 🧭 Rotas e Páginas (Endpoints)
+| Método | Rota                | Descrição          |
+| ------ | ------------------- | ------------------ |
+| GET    | `/api/resumo`       | Últimas leituras   |
+| GET    | `/leituras`         | Lista paginada     |
+| POST   | `/leituras`         | Nova leitura       |
+| GET    | `/leituras/<id>`    | Detalhes           |
+| PUT    | `/leituras/<id>`    | Atualização        |
+| DELETE | `/leituras/<id>`    | Remoção            |
+| GET    | `/api/estatisticas` | Métricas agregadas |
 
-### Interface de Visualização HTML (via Browser)
-- `GET /`: Painel do **Dashboard** com estatísticas animadas e tabela resumiu em tempo-real. (Antiga lista crua movida para `api/resumo`).
-- `GET /historico`: Página de listagem com **edição** e **remoção** acionáveis.
-- `GET /editar/<id_leitura>`: Ferramenta que recarrega configurações da telemetria sob demanda para input/correções manuais.
+## Conclusão 
+Este projeto demonstra na prática como construir um sistema completo de IoT, conectando sensores físicos a uma aplicação web moderna.
 
-### API REST
-| Método | Endpoint                    | Função                                                                                             |
-|--------|-----------------------------|----------------------------------------------------------------------------------------------------|
-| GET    | `/api/resumo`            | Últimas 10 leituras formatadas no JSON cru.                                                       |
-| GET    | `/leituras`                 | Busca paginada completa listando telemetrias (`?limit=20&offset=0`).                            |
-| POST   | `/leituras`                 | Adiciona nova leitura recebendo um corpo Payload `{ "temperatura": X, "umidade": Y }`.             |
-| GET    | `/leituras/<id>`            | Retorna os detalhes sensíveis individuais.                                                         |
-| PUT    | `/leituras/<id>`            | Atualização parcial daquela telemetria com base nos inputs json informados.                        |
-| DELETE | `/leituras/<id>`            | Deleta permanentemente por ID.                                                                      |
-| GET    | `/api/estatisticas`         | Consome função `AVG(), MIN(), MAX()` do SQLite e retorna os relatórios formatados em métricas JSON.  |
+A solução evidencia conhecimentos em:
 
----
+Sistemas embarcados
+Integração de sistemas
+Backend APIs
+Banco de dados
+Frontend interativo
 
-## 🎯 Avaliação (Features Implementadas)
-| Item do PDF | Status | Resumo Implementação |
-|:---:|:---|:---|
-| Comunicação / Dados | 🟢 | Python Simulation -> Loop Rest API -> DB
-| API REST Completa    | 🟢 | Todo o Schema do item 7 (+ Endpoint Resumo / Front)
-| Banco de Dados        | 🟢 | CRUD Completo com Otimização WAL Concorrente
-| Interface Web         | 🟢 | Layout Premium (Dashboard, Historico e Edição)
-| Gráfico Temporal      | 🟢 | Gráfico de Linha Integrado com JS ChartJS
-| Documentação e Arq    | 🟢 | Arquitetura modularizada bem documentada
+## Fotos da montagem 
 
-Feito com ☕ e focado em excelência de usabilidade (UI/UX).
