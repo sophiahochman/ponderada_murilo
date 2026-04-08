@@ -1,0 +1,80 @@
+<!DOCTYPE strict>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico | Estação Meteorológica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="light-mode">
+    <div class="container">
+        <!-- Header -->
+        <header class="glass-panel">
+            <nav class="main-nav">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/historico" class="nav-link active">Histórico Completo</a>
+            </nav>
+            <div class="header-content">
+                <div>
+                    <h1>Histórico de Leituras</h1>
+                    <p class="subtitle">Banco de dados completo da Estação Meteorológica IoT</p>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Tabela Completa -->
+            <div class="table-container glass-panel">
+                <div class="section-header">
+                    <h2>Todas as Leituras Registradas</h2>
+                    <div>
+                        <span id="page-info" class="text-muted" style="margin-right: 16px; font-weight: 500;">Página 1</span>
+                        <button class="btn btn-icon" id="btn-refresh" title="Atualizar Dados">
+                            <i data-feather="refresh-cw"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="historico-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Timestamp</th>
+                                <th>Localização</th>
+                                <th>Temperatura</th>
+                                <th>Umidade</th>
+                                <th>Pressão</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historico-body">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">Aguardando dados...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginação Padrão -->
+                <div style="padding: 16px 36px 36px; display: flex; justify-content: space-between; align-items: center;">
+                    <button class="btn btn-icon" id="btn-prev" title="Página Anterior" disabled>
+                        <i data-feather="chevron-left"></i>
+                    </button>
+                    <span id="total-registers" class="text-muted font-weight-500">Total: --</span>
+                    <button class="btn btn-icon" id="btn-next" title="Próxima Página">
+                        <i data-feather="chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Atividade Acadêmica - Sistema Meteorológico IoT</p>
+        </footer>
+    </div>
+    <script>feather.replace();</script>
+    <script src="/static/js/historico.js"></script>
+</body>
+</html>

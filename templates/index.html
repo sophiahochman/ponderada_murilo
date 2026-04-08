@@ -1,0 +1,169 @@
+<!DOCTYPE strict>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard IoT | Estação Meteorológica</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js para os gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <!-- Feather Icons para ícones bonitos -->
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="light-mode">
+
+    <div class="container">
+        <!-- Header -->
+        <header class="glass-panel">
+            <nav class="main-nav">
+                <a href="/" class="nav-link active">Dashboard</a>
+                <a href="/historico" class="nav-link">Histórico Completo</a>
+            </nav>
+            <div class="header-content">
+                <div>
+                    <h1>Estação Meteorológica IoT</h1>
+                    <p class="subtitle" id="global-status">Monitoramento em Tempo Real <span class="status-indicator active"></span></p>
+                </div>
+                <div class="header-actions">
+                    <div class="time-display" id="clock-display">00:00:00</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <main>
+            <div class="stats-grid">
+                <!-- Temperatura -->
+                <div class="stat-card glass-panel" id="card-temp">
+                    <div class="stat-header">
+                        <span class="stat-title">Temperatura</span>
+                        <i data-feather="thermometer" class="icon icon-orange"></i>
+                    </div>
+                    <div class="stat-main">
+                        <span class="stat-value" id="current-temp">--</span>
+                        <span class="stat-unit">°C</span>
+                    </div>
+                    <div class="stat-footer">
+                        <div class="min-max">
+                            <span><i data-feather="arrow-down" class="icon-small text-muted"></i> <span id="min-temp">--</span></span>
+                            <span><i data-feather="arrow-up" class="icon-small text-muted"></i> <span id="max-temp">--</span></span>
+                        </div>
+                        <span class="avg-label">Média: <span id="avg-temp">--</span></span>
+                    </div>
+                </div>
+
+                <!-- Umidade -->
+                <div class="stat-card glass-panel" id="card-umid">
+                    <div class="stat-header">
+                        <span class="stat-title">Umidade</span>
+                        <i data-feather="droplet" class="icon icon-blue"></i>
+                    </div>
+                    <div class="stat-main">
+                        <span class="stat-value" id="current-umid">--</span>
+                        <span class="stat-unit">%</span>
+                    </div>
+                    <div class="stat-footer">
+                        <div class="min-max">
+                            <span><i data-feather="arrow-down" class="icon-small text-muted"></i> <span id="min-umid">--</span></span>
+                            <span><i data-feather="arrow-up" class="icon-small text-muted"></i> <span id="max-umid">--</span></span>
+                        </div>
+                        <span class="avg-label">Média: <span id="avg-umid">--</span></span>
+                    </div>
+                </div>
+
+                <!-- Pressão -->
+                <div class="stat-card glass-panel" id="card-press">
+                    <div class="stat-header">
+                        <span class="stat-title">Pressão Atmosférica</span>
+                        <i data-feather="wind" class="icon icon-teal"></i>
+                    </div>
+                    <div class="stat-main">
+                        <span class="stat-value" id="current-press">--</span>
+                        <span class="stat-unit">hPa</span>
+                    </div>
+                    <div class="stat-footer">
+                        <div class="min-max">
+                            <span><i data-feather="arrow-down" class="icon-small text-muted"></i> <span id="min-press">--</span></span>
+                            <span><i data-feather="arrow-up" class="icon-small text-muted"></i> <span id="max-press">--</span></span>
+                        </div>
+                        <span class="avg-label">Média: <span id="avg-press">--</span></span>
+                    </div>
+                </div>
+
+                <!-- Total de Leituras -->
+                <div class="stat-card glass-panel meta-card">
+                    <div class="stat-header">
+                        <span class="stat-title">Total de Registros</span>
+                        <i data-feather="database" class="icon icon-purple"></i>
+                    </div>
+                    <div class="stat-main">
+                        <span class="stat-value-large" id="total-leituras">--</span>
+                    </div>
+                    <div class="stat-footer">
+                        <span class="avg-label">Coleta contínua na base dedados.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico Interativo -->
+            <div class="chart-container glass-panel">
+                <div class="section-header">
+                    <h2>Histórico das Últimas 24 Leituras</h2>
+                    <div class="badges">
+                        <span class="badge badge-temp">Temperatura</span>
+                        <span class="badge badge-umid">Umidade</span>
+                    </div>
+                </div>
+                <div class="canvas-wrapper">
+                    <canvas id="historyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Tabela Recentes -->
+            <div class="table-container glass-panel">
+                <div class="section-header">
+                    <h2>Últimas 10 Leituras Detectadas</h2>
+                    <button class="btn btn-icon" id="btn-refresh" title="Atualizar Agora">
+                        <i data-feather="refresh-cw"></i>
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table id="readings-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Timestamp</th>
+                                <th>Localização</th>
+                                <th>Temperatura</th>
+                                <th>Umidade</th>
+                                <th>Pressão</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Populated via JS -->
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">Carregando dados...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Atividade Acadêmica - Sistema Meteorológico IoT</p>
+        </footer>
+    </div>
+
+    <!-- Inicializa Feather Icons -->
+    <script>
+        feather.replace();
+    </script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

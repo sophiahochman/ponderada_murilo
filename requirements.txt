@@ -1,0 +1,12 @@
+# requirements.txt
+# Dependências do Sistema de Medição de Estação Meteorológica IoT
+# ================================================================
+# Instalar com: pip install -r requirements.txt
+
+# API REST Framework
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# Requisições HTTP e Ponte Física
+requests>=2.31.0
+pyserial>=3.5
