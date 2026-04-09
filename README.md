@@ -1,4 +1,4 @@
-# Sistema de Estação Meteorológica IoT (End-to-End)
+# Sistema de Estação Meteorológica :)
 
 ## Visão Geral
 
