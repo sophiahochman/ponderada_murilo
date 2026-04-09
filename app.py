@@ -1,23 +1,3 @@
-"""
-app.py
-======
-API REST Flask - Sistema de Medição de Estação Meteorológica IoT
-
-Endpoints implementados:
-    GET  /                    → Últimas 10 leituras (resumo rápido)
-    GET  /leituras            → Histórico completo com paginação
-    POST /leituras            → Inserir nova leitura via JSON
-    GET  /leituras/<id>       → Detalhes de uma leitura específica
-    PUT  /leituras/<id>       → Atualizar campos de uma leitura
-    DELETE /leituras/<id>     → Remover uma leitura
-    GET  /api/estatisticas    → Estatísticas agregadas (média, min, max)
-
-Uso:
-    python app.py
-    # Ou com Flask CLI:
-    flask --app app run --debug
-"""
-
 from flask import Flask, request, jsonify, abort, render_template
 from flask_cors import CORS
 from database import (
