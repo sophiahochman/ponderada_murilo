@@ -4,15 +4,15 @@ import requests
 import time
 import logging
 
-# Configuração de Logs
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-# Configurações Constantes
-PORTA = 'COM3'          # Porta USB no Windows (Mude para /dev/ttyUSB0 no Linux se precisar)
+
+PORTA = 'COM3'          
 BAUD  = 9600
 URL   = 'http://localhost:5000/leituras'
 
@@ -27,14 +27,11 @@ def ler_serial():
             
             while True:
                 try:
-                    # Lê de fato a linha da porta serial
                     linha = ser.readline().decode('utf-8').strip()
                     if linha:
                         try:
-                            # O output do Arduino DEVE ser um objeto JSON ex: {"temperatura": 25.5, "umidade": 60}
                             dados = json.loads(linha)
                             
-                            # Realiza o request POST na API do Flask
                             response = requests.post(URL, json=dados)
                             
                             if response.status_code == 201:
