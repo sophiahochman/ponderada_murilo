@@ -1,6 +1,6 @@
-# 🌦️ Sistema de Estação Meteorológica IoT (End-to-End)
+# Sistema de Estação Meteorológica IoT (End-to-End)
 
-## 📖 Visão Geral
+## Visão Geral
 
 Este projeto implementa um sistema completo de **Internet das Coisas (IoT)** para monitoramento ambiental, integrando **hardware físico, backend e frontend** em uma arquitetura ponta a ponta.
 
@@ -10,7 +10,7 @@ O grande diferencial do projeto é a **integração real entre o mundo físico e
 
 ---
 
-## 🧠 Arquitetura do Sistema
+## Arquitetura do Sistema
 
 O sistema é dividido em três camadas principais:
 
@@ -20,15 +20,15 @@ A camada de hardware é responsável pela **coleta dos dados ambientais**.
 
 - Utilização de **Arduino + sensor DHT11**
 - Leitura de:
-  - 🌡️ Temperatura
-  - 💧 Umidade
+  - Temperatura
+  -  Umidade
 - Envio dos dados via **comunicação serial (USB)**
 
 Além disso, implementei a **ponte entre hardware e software**, garantindo que os dados físicos fossem corretamente interpretados e enviados ao sistema.
 
 ---
 
-### 🔄 2. Camada de Integração (Serial → API)
+### 2. Camada de Integração (Serial → API)
 
 O arquivo `serial_reader.py` atua como um **middleware**, sendo essencial para conectar o hardware ao backend.
 
@@ -38,13 +38,13 @@ Funções principais:
 - Converte os dados em requisições HTTP (`POST`)
 - Envia para a API Flask
 
-💡 Isso simula um ambiente de produção real onde dispositivos IoT enviam dados para servidores via rede.
+ Isso simula um ambiente de produção real onde dispositivos IoT enviam dados para servidores via rede.
 
 > Para testes sem hardware físico, o projeto inclui `simulator.py`, que simula o envio dos dados.
 
 ---
 
-### ⚙️ 3. Backend (API + Persistência)
+### 3. Backend (API + Persistência)
 
 Desenvolvido em **Python com Flask**, o backend é responsável por:
 
@@ -67,7 +67,7 @@ Desenvolvido em **Python com Flask**, o backend é responsável por:
 
 ---
 
-### 💻 4. Frontend (Interface Web)
+### 4. Frontend (Interface Web)
 
 Interface desenvolvida com:
 
@@ -84,7 +84,7 @@ Interface desenvolvida com:
 
 ---
 
-## 🔗 Fluxo Completo de Dados
+## Fluxo Completo de Dados
 
 ```text
 Sensor (DHT11)
@@ -100,7 +100,7 @@ Banco SQLite
 Frontend (Dashboard em tempo real)
 ```
 
-## 🛠️ Como Executar o Projeto
+## Como Executar o Projeto
 
 ### 1. Configurar ambiente
 
