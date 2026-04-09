@@ -14,7 +14,7 @@ O grande diferencial do projeto é a **integração real entre o mundo físico e
 
 O sistema é dividido em três camadas principais:
 
-### 🔌 1. Hardware (IoT) — *Responsabilidade desenvolvida por mim*
+### 1. Hardware (IoT) — *Responsabilidade desenvolvida por mim*
 
 A camada de hardware é responsável pela **coleta dos dados ambientais**.
 
